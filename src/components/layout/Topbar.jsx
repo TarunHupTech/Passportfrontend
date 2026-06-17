@@ -18,6 +18,12 @@ export default function Topbar({ onMenu }) {
 
   const firstName = user?.name?.split(" ")[0] || "there";
 
+  // Clear the local session, then log the customer out of Shopify too.
+  const handleSignOut = () => {
+    logout();
+    window.location.href = "https://tarun-yzuldbwu.myshopify.com/account/logout";
+  };
+
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-cream-50/80 px-5 py-4 backdrop-blur-md lg:px-8">
       <div className="flex items-center gap-3">
@@ -60,12 +66,10 @@ export default function Topbar({ onMenu }) {
               <p className="truncate text-xs text-muted">{user?.email}</p>
             </div>
             <button
-              onClick={logout}
+              onClick={handleSignOut}
               className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-ink transition hover:bg-cream-100"
             >
-              <a href="https://tarun-yzuldbwu.myshopify.com/account/logout" className="flex items-center gap-2">
-                <LogOut size={16} /> Sign out
-              </a>
+              <LogOut size={16} /> Sign out
             </button>
           </div>
         )}
