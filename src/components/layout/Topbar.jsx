@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Menu, LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { TOKEN_KEY } from "../../lib/api";
 import { greeting } from "../../lib/format";
 
 export default function Topbar({ onMenu }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -18,10 +19,11 @@ export default function Topbar({ onMenu }) {
 
   const firstName = user?.name?.split(" ")[0] || "there";
 
-  // Clear the local session, then log the customer out of Shopify too.
+  // Clear the local session WITHOUT touching React state (so ProtectedRoute
+  // never renders /login), then hard-redirect to Shopify logout.
   const handleSignOut = () => {
-    logout();
-    window.location.href = "https://tarun-yzuldbwu.myshopify.com/account/logout";
+    localStorage.removeItem(TOKEN_KEY);
+    window.location.replace("https://tarun-yzuldbwu.myshopify.com/account/logout");
   };
 
   return (
