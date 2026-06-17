@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------
+   LIALI — Private Valuation Portal
+   Luxury gold / cream theme (CSS-first Tailwind v4 config)
+---------------------------------------------------------------------- */
+@theme {
+  /* Warm ivory backgrounds */
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #faf6ef;
+  --color-cream-200: #f3ead9;
+  --color-cream-300: #ece1cb;
+
+  /* Gold accent scale */
+  --color-gold-100: #f6eccf;
+  --color-gold-200: #ecd9a6;
+  --color-gold-300: #e0c279;
+  --color-gold-400: #d2ac56;
+  --color-gold-500: #c5a05a;
+  --color-gold-600: #ad8743;
+  --color-gold-700: #8a6a31;
+
+  /* Deep burgundy (sidebar + brand surfaces) */
+  --color-espresso-700: #7e2f36;
+  --color-espresso-800: #4f1a20;
+  --color-espresso-900: #5D0A15;
+
+  /* Ink + supporting neutrals */
+  --color-ink: #221c14;
+  --color-muted: #8a7f6e;
+  --color-line: #ece3d3;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --shadow-luxe: 0 1px 2px rgba(34, 28, 20, 0.04),
+    0 8px 24px -12px rgba(34, 28, 20, 0.12);
+  --shadow-luxe-lg: 0 2px 4px rgba(34, 28, 20, 0.05),
+    0 24px 48px -16px rgba(34, 28, 20, 0.18);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream-100);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Elegant thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cream-300) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-cream-300);
+  border-radius: 9999px;
+}
+
+/* Reusable component classes */
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-luxe);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.625rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-gold-500), var(--color-gold-600));
+    color: #fff;
+    box-shadow: 0 6px 16px -6px rgba(173, 135, 67, 0.6);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+  .btn-dark {
+    background: var(--color-espresso-900);
+    color: var(--color-cream-100);
+  }
+  .btn-dark:hover {
+    background: var(--color-espresso-800);
+  }
+  .btn-ghost {
+    background: #fff;
+    color: var(--color-ink);
+    border: 1px solid var(--color-line);
+  }
+  .btn-ghost:hover {
+    background: var(--color-cream-100);
+    border-color: var(--color-gold-300);
+  }
+
+  .input {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    outline: none;
+  }
+  .input:focus {
+    border-color: var(--color-gold-400);
+    box-shadow: 0 0 0 3px rgba(210, 172, 86, 0.18);
+  }
+  .label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.01em;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
