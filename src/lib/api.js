@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Backend origin. Change here if the server runs elsewhere.
-export const API_ORIGIN = "http://localhost:5000";
+export const API_ORIGIN = "https://passportbackend-production.up.railway.app";
 
 export const TOKEN_KEY = "liali_token";
 
