@@ -128,7 +128,7 @@ export default function PurchaseOrders() {
       <div className="mb-6">
         <h1 className="flex items-center gap-2.5 font-display text-2xl font-semibold text-ink sm:text-3xl">
           <ShoppingBag size={26} className="text-gold-500" />
-          Purchase Orders
+          Liali Orders
         </h1>
         <p className="mt-1 text-sm text-muted">
           Orders you've placed in the LIALI Website.
