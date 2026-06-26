@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { Gem, Tag, Crown, Plus, FileBadge, ArrowRight } from "lucide-react";
+import { Gem, Tag, Crown, Plus, FileBadge, ArrowRight, Sparkles } from "lucide-react";
 import api from "../lib/api";
 import { formatAED, greeting } from "../lib/format";
 import { useAuth } from "../context/AuthContext";
@@ -102,6 +102,21 @@ export default function Dashboard() {
           value={mv ? formatAED(mv.invoiceAmount ?? mv.estimatedValue) : "—"}
           sub={mv?.name}
         />
+      </div>
+
+      {/* Live pricing teaser */}
+      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-gold-200 bg-gradient-to-r from-gold-100/70 to-cream-50 p-5">
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-white text-gold-600 shadow-sm">
+          <Sparkles size={20} />
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold text-ink">Live Pricing</p>
+          <p className="text-sm text-muted">
+            Real-time gold &amp; silver rates in AED per gram are coming soon —
+            your portfolio value will update automatically.
+          </p>
+        </div>
+        <span className="chip bg-espresso-900 text-white/90">Coming soon</span>
       </div>
 
       {/* Recently added */}

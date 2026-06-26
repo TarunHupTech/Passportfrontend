@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Gem, Tag, ShoppingBag, FileBadge } from "lucide-react";
+import { LayoutDashboard, Gem, Tag, ShoppingBag, FileBadge, Sparkles } from "lucide-react";
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -46,6 +46,20 @@ export default function Sidebar({ onNavigate }) {
           </NavLink>
         ))}
       </nav>
+
+      {/* Live pricing teaser (from the prototype) */}
+      <div className="m-4 rounded-2xl border border-gold-500/25 bg-gradient-to-br from-espresso-800 to-espresso-900 p-5">
+        <div className="flex items-center gap-2 text-gold-300">
+          <Sparkles size={16} />
+          <span className="text-xs font-semibold uppercase tracking-wider">
+            Live Pricing
+          </span>
+        </div>
+        <p className="mt-2 text-xs leading-relaxed text-cream-100/55">
+          Real-time gold &amp; silver rates in AED are coming soon to your
+          portfolio.
+        </p>
+      </div>
     </aside>
   );
 }
