@@ -5,7 +5,7 @@ const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/jewellery", label: "My Jewellery", icon: Gem },
   { to: "/brands", label: "Brands", icon: Tag },
-  { to: "/orders", label: "Purchase Orders", icon: ShoppingBag },
+  { to: "/orders", label: "Liali Orders", icon: ShoppingBag },
   { to: "/certificate", label: "Valuation Certificate", icon: FileBadge },
 ];
 

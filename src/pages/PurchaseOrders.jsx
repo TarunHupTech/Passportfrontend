@@ -131,7 +131,7 @@ export default function PurchaseOrders() {
           Purchase Orders
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Orders you've placed in the LIALI Shopify store.
+          Orders you've placed in the LIALI Website.
         </p>
       </div>
 

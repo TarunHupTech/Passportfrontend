@@ -125,7 +125,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
     <Drawer
       open={open}
       onClose={onClose}
-      title={isEdit ? "Edit jewellery item" : "Add jewellery item"}
+      title={isEdit ? "Edit jewellery item" : "Add Jewellery Item"}
       subtitle="Record your piece and the amount you paid (invoice amount)."
       widthClass="max-w-xl"
     >
@@ -210,7 +210,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
               list="brand-options"
               value={form.brand}
               onChange={set("brand")}
-              placeholder="e.g. Cartier"
+              placeholder="e.g. Liali"
             />
             <datalist id="brand-options">
               {brands.map((b) => (
