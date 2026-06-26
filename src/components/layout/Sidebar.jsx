@@ -6,7 +6,7 @@ const NAV = [
   { to: "/jewellery", label: "My Jewellery", icon: Gem },
   { to: "/brands", label: "Brands", icon: Tag },
   { to: "/orders", label: "Liali Orders", icon: ShoppingBag },
-  { to: "/certificate", label: "Valuation Certificate", icon: FileBadge },
+  { to: "/certificate", label: "Jewellery Portfolio", icon: FileBadge },
 ];
 
 export default function Sidebar({ onNavigate }) {

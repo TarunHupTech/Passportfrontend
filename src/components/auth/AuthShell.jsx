@@ -38,7 +38,7 @@ export default function AuthShell({ children }) {
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-cream-100/55">
               Track every piece, see a live estimated value in AED, organise your
-              collections and generate branded valuation certificates.
+              collections and generate branded Jewellery certificates.
             </p>
           </div>
 

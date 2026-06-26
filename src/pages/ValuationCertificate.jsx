@@ -71,7 +71,7 @@ export default function ValuationCertificate() {
         <div>
           <h1 className="flex items-center gap-2.5 font-display text-2xl font-semibold text-ink sm:text-3xl">
             <FileBadge size={26} className="text-gold-500" />
-            Valuation Certificate
+            Jewellery Certificate
           </h1>
           <p className="mt-1 text-sm text-muted">
             A portfolio-wide certificate of every item you own and its estimated value.
@@ -102,7 +102,7 @@ export default function ValuationCertificate() {
         <EmptyState
           icon={Gem}
           title="Nothing to certify yet"
-          message="Add jewellery items to your portfolio, then generate your branded valuation certificate here."
+          message="Add jewellery items to your portfolio, then generate your branded Jewellery Certificate here."
           action={
             <Link to="/jewellery" className="btn btn-primary">
               <Plus size={18} /> Add Jewellery
@@ -124,7 +124,7 @@ export default function ValuationCertificate() {
             <div className="h-9 w-px bg-gold-200" />
             <div>
               <p className="text-[0.68rem] font-medium uppercase tracking-wider text-muted">
-                Total Portfolio Value
+                Total Invoice Value
               </p>
               <p className="font-display text-xl font-semibold text-gold-700">
                 {formatAED(total)}

@@ -77,7 +77,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
               color: C.burgundy,
             }}
           >
-            Jewellery Valuation Certificate
+            Jewellery Portfolio
           </div>
           <div
             style={{
@@ -97,7 +97,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
         <div style={{ display: "flex", gap: 24, marginTop: 40 }}>
           {[
             { label: "Member", value: user?.name || "—" },
-            { label: "Date of Valuation", value: formatDate(new Date()) },
+            { label: "Date", value: formatDate(new Date()) },
             { label: "Reference", value: reference(user?.id || user?._id) },
           ].map((m) => (
             <div key={m.label} style={{ flex: 1 }}>
@@ -179,7 +179,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
               color: C.burgundy,
             }}
           >
-            Total Portfolio Value
+            Total Invoice Value
           </span>
           <span
             style={{
