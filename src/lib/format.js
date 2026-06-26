@@ -13,6 +13,22 @@ export const formatAED = (value, decimals = 0) => {
 export const formatNumber = (value) =>
   new Intl.NumberFormat("en-AE").format(Number(value) || 0);
 
+// Format a Shopify money object { amount, currencyCode } in its own currency.
+export const formatMoney = (money) => {
+  if (!money || money.amount == null) return "—";
+  const n = Number(money.amount) || 0;
+  try {
+    return new Intl.NumberFormat("en-AE", {
+      style: "currency",
+      currency: money.currencyCode || "AED",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
+  } catch {
+    return `${money.currencyCode || ""} ${n.toFixed(2)}`.trim();
+  }
+};
+
 export const formatDate = (date) => {
   if (!date) return "—";
   return new Date(date).toLocaleDateString("en-GB", {

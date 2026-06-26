@@ -25,7 +25,7 @@ export default function ValuationCertificate() {
       .finally(() => setLoading(false));
   }, []);
 
-  const total = products.reduce((s, p) => s + (p.estimatedValue || 0), 0);
+  const total = products.reduce((s, p) => s + (p.invoiceAmount ?? p.estimatedValue ?? 0), 0);
 
   const handleDownload = async () => {
     if (!certRef.current) return;

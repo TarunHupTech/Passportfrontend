@@ -7,7 +7,8 @@ import Register from './pages/Register'
 import SsoLogin from './pages/SsoLogin'
 import Dashboard from './pages/Dashboard'
 import MyJewellery from './pages/MyJewellery'
-import Collections from './pages/Collections'
+import Brands from './pages/Brands'
+import PurchaseOrders from './pages/PurchaseOrders'
 import ValuationCertificate from './pages/ValuationCertificate'
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
       >
         <Route path="/" element={<Dashboard />} />
         <Route path="/jewellery" element={<MyJewellery />} />
-        <Route path="/collections" element={<Collections />} />
+        <Route path="/brands" element={<Brands />} />
+        <Route path="/orders" element={<PurchaseOrders />} />
         <Route path="/certificate" element={<ValuationCertificate />} />
       </Route>
 

@@ -1,7 +1,9 @@
 import axios from "axios";
 
-// Backend origin. Change here if the server runs elsewhere.
-export const API_ORIGIN = "https://passportbackend-production.up.railway.app";
+// Backend origin. Defaults to the deployed Railway API; override locally with
+// VITE_API_ORIGIN in a .env.local (e.g. http://localhost:5000).
+export const API_ORIGIN =
+  import.meta.env.VITE_API_ORIGIN || "https://passportbackend-production.up.railway.app";
 
 export const TOKEN_KEY = "liali_token";
 

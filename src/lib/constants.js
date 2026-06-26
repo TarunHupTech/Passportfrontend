@@ -29,7 +29,7 @@ export const STONE_TYPES = [
 export const SORT_OPTIONS = [
   { value: "newest", label: "Newest first" },
   { value: "oldest", label: "Oldest first" },
-  { value: "value-high", label: "Value: high to low" },
-  { value: "value-low", label: "Value: low to high" },
+  { value: "value-high", label: "Invoice: high to low" },
+  { value: "value-low", label: "Invoice: low to high" },
   { value: "name", label: "Name (A–Z)" },
 ];

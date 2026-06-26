@@ -1,16 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import {
-  Gem,
-  Layers,
-  Crown,
-  TrendingUp,
-  Plus,
-  FileBadge,
-  Sparkles,
-  ArrowRight,
-} from "lucide-react";
-import api, { imageUrl } from "../lib/api";
+import { Gem, Tag, Crown, Plus, FileBadge, ArrowRight } from "lucide-react";
+import api from "../lib/api";
 import { formatAED, greeting } from "../lib/format";
 import { useAuth } from "../context/AuthContext";
 import StatCard from "../components/ui/StatCard";
@@ -22,7 +13,7 @@ import Spinner from "../components/ui/Spinner";
 export default function Dashboard() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
-  const [collections, setCollections] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -32,12 +23,12 @@ export default function Dashboard() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [dash, cols] = await Promise.all([
+      const [dash, br] = await Promise.all([
         api.get("/dashboard"),
-        api.get("/collections"),
+        api.get("/brands"),
       ]);
       setData(dash.data);
-      setCollections(cols.data);
+      setBrands(br.data);
     } finally {
       setLoading(false);
     }
@@ -84,13 +75,9 @@ export default function Dashboard() {
             <p className="text-xs font-medium uppercase tracking-[0.22em] text-cream-100/50">
               {greeting()}, {firstName}
             </p>
-            <p className="mt-3 text-sm text-cream-100/60">Total estimated value</p>
+            <p className="mt-3 text-sm text-cream-100/60">Total invoice amount</p>
             <p className="font-display text-4xl font-semibold text-gold-300 sm:text-5xl">
-              {formatAED(data?.totalEstimatedValue)}
-            </p>
-            <p className="mt-2 flex items-center gap-1.5 text-sm text-cream-100/55">
-              <TrendingUp size={15} className="text-gold-300" />
-              Est. buy-back {formatAED(data?.totalResaleValue)}
+              {formatAED(data?.totalInvoiceAmount)}
             </p>
           </div>
 
@@ -106,35 +93,15 @@ export default function Dashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         <StatCard icon={Gem} label="Jewellery Items" value={data?.itemCount ?? 0} />
-        <StatCard icon={Layers} label="Collections" value={data?.collectionsCount ?? 0} />
+        <StatCard icon={Tag} label="Brands" value={data?.brandsCount ?? 0} />
         <StatCard
           icon={Crown}
           label="Most Valuable"
-          value={mv ? formatAED(mv.estimatedValue) : "—"}
+          value={mv ? formatAED(mv.invoiceAmount ?? mv.estimatedValue) : "—"}
           sub={mv?.name}
         />
-        <StatCard
-          icon={TrendingUp}
-          label="Est. Buy-back Value"
-          value={formatAED(data?.totalResaleValue)}
-        />
-      </div>
-
-      {/* Live pricing teaser */}
-      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-gold-200 bg-gradient-to-r from-gold-100/70 to-cream-50 p-5">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-white text-gold-600 shadow-sm">
-          <Sparkles size={20} />
-        </div>
-        <div className="flex-1">
-          <p className="font-semibold text-ink">Live Pricing</p>
-          <p className="text-sm text-muted">
-            Real-time gold &amp; silver rates in AED per gram are coming soon —
-            your portfolio value will update automatically.
-          </p>
-        </div>
-        <span className="chip bg-espresso-900 text-white/90">Coming soon</span>
       </div>
 
       {/* Recently added */}
@@ -154,12 +121,7 @@ export default function Dashboard() {
         {data?.recentItems?.length ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.recentItems.map((p) => (
-              <ProductCard
-                key={p._id}
-                product={p}
-                onEdit={openEdit}
-                onDelete={setDeleting}
-              />
+              <ProductCard key={p._id} product={p} onEdit={openEdit} onDelete={setDeleting} />
             ))}
           </div>
         ) : (
@@ -172,7 +134,7 @@ export default function Dashboard() {
                 Your portfolio is empty
               </h3>
               <p className="mt-1 text-sm text-muted">
-                Add your first jewellery item to see its estimated value.
+                Add your first jewellery item to start your collection.
               </p>
             </div>
             <button className="btn btn-primary" onClick={openAdd}>
@@ -187,8 +149,7 @@ export default function Dashboard() {
         onClose={() => setFormOpen(false)}
         onSaved={load}
         product={editing}
-        collections={collections}
-        onCollectionCreated={load}
+        brands={brands}
       />
       <ConfirmDialog
         open={Boolean(deleting)}

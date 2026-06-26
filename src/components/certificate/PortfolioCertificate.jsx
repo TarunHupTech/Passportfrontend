@@ -126,7 +126,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
               <th style={{ ...th, textAlign: "left" }}>Metal</th>
               <th style={{ ...th, textAlign: "left" }}>Stone</th>
               <th style={{ ...th, textAlign: "right" }}>Weight</th>
-              <th style={{ ...th, textAlign: "right" }}>Est. Value (AED)</th>
+              <th style={{ ...th, textAlign: "right" }}>Invoice Amount (AED)</th>
             </tr>
           </thead>
           <tbody>
@@ -153,7 +153,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
                     textAlign: "right",
                   }}
                 >
-                  {formatAED(p.estimatedValue)}
+                  {formatAED(p.invoiceAmount ?? p.estimatedValue)}
                 </td>
               </tr>
             ))}

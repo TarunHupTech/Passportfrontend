@@ -13,8 +13,8 @@ export default function ProductTable({ products, onEdit, onDelete }) {
               <th className="px-5 py-3.5 font-semibold">Metal</th>
               <th className="px-5 py-3.5 font-semibold">Stone</th>
               <th className="px-5 py-3.5 font-semibold">Weight</th>
-              <th className="px-5 py-3.5 font-semibold">Collection</th>
-              <th className="px-5 py-3.5 text-right font-semibold">Est. value</th>
+              <th className="px-5 py-3.5 font-semibold">Brand</th>
+              <th className="px-5 py-3.5 text-right font-semibold">Invoice</th>
               <th className="px-5 py-3.5 text-right font-semibold">Actions</th>
             </tr>
           </thead>
@@ -50,11 +50,9 @@ export default function ProductTable({ products, onEdit, onDelete }) {
                   {p.stoneType && p.stoneType !== "None" ? p.stoneType : "—"}
                 </td>
                 <td className="px-5 py-3 text-ink/80">{p.netWeight || 0} g</td>
-                <td className="px-5 py-3 text-ink/80">
-                  {p.collectionId?.name || "—"}
-                </td>
+                <td className="px-5 py-3 text-ink/80">{p.brand || "—"}</td>
                 <td className="px-5 py-3 text-right font-semibold text-gold-600">
-                  {formatAED(p.estimatedValue)}
+                  {formatAED(p.invoiceAmount ?? p.estimatedValue)}
                 </td>
                 <td className="px-5 py-3">
                   <div className="flex justify-end gap-1.5">

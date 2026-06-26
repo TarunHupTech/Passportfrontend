@@ -111,15 +111,15 @@ export default function ProductCard({ product, onEdit, onDelete }) {
         <div className="mt-3 flex items-end justify-between border-t border-line pt-3">
           <div>
             <p className="text-[0.65rem] font-medium uppercase tracking-wider text-muted">
-              Estimated value
+              Invoice amount
             </p>
             <p className="font-display text-lg font-semibold text-gold-600">
-              {formatAED(product.estimatedValue)}
+              {formatAED(product.invoiceAmount ?? product.estimatedValue)}
             </p>
           </div>
-          {product.collectionId?.name && (
+          {product.brand && (
             <span className="chip bg-cream-100 text-espresso-700">
-              {product.collectionId.name}
+              {product.brand}
             </span>
           )}
         </div>

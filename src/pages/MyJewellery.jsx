@@ -13,20 +13,20 @@ import Spinner from "../components/ui/Spinner";
 export default function MyJewellery() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("grid");
 
   const [search, setSearch] = useState("");
   const [metalType, setMetalType] = useState("");
   const [stoneType, setStoneType] = useState("");
-  // Pre-filter by ?collection=<id> when arriving from a collection's "View items".
-  const [collectionId, setCollectionId] = useState(searchParams.get("collection") || "");
+  // Pre-filter by ?brand=<name> when arriving from a brand's "View items".
+  const [brandFilter, setBrandFilter] = useState(searchParams.get("brand") || "");
   const [sort, setSort] = useState("newest");
 
-  // Keep the filter in sync if the URL param changes (e.g. navigating between collections).
+  // Keep the filter in sync if the URL param changes (e.g. navigating between brands).
   useEffect(() => {
-    setCollectionId(searchParams.get("collection") || "");
+    setBrandFilter(searchParams.get("brand") || "");
   }, [searchParams]);
 
   const [formOpen, setFormOpen] = useState(false);
@@ -41,7 +41,7 @@ export default function MyJewellery() {
       if (search.trim()) params.search = search.trim();
       if (metalType) params.metalType = metalType;
       if (stoneType) params.stoneType = stoneType;
-      if (collectionId) params.collectionId = collectionId;
+      if (brandFilter) params.brand = brandFilter;
       if (sort) params.sort = sort;
       const res = await api.get("/products", { params });
       setProducts(res.data);
@@ -50,7 +50,7 @@ export default function MyJewellery() {
     } finally {
       setLoading(false);
     }
-  }, [search, metalType, stoneType, collectionId, sort]);
+  }, [search, metalType, stoneType, brandFilter, sort]);
 
   // Debounce so typing in search doesn't fire a request per keystroke.
   useEffect(() => {
@@ -58,14 +58,14 @@ export default function MyJewellery() {
     return () => clearTimeout(t);
   }, [fetchProducts]);
 
-  const loadCollections = useCallback(
-    () => api.get("/collections").then((res) => setCollections(res.data)).catch(() => {}),
+  const loadBrands = useCallback(
+    () => api.get("/brands").then((res) => setBrands(res.data)).catch(() => {}),
     []
   );
 
   useEffect(() => {
-    loadCollections();
-  }, [loadCollections]);
+    loadBrands();
+  }, [loadBrands]);
 
   const openAdd = () => {
     setEditing(null);
@@ -78,7 +78,7 @@ export default function MyJewellery() {
 
   const handleSaved = () => {
     fetchProducts();
-    loadCollections();
+    loadBrands();
   };
 
   const confirmDelete = async () => {
@@ -93,7 +93,7 @@ export default function MyJewellery() {
     }
   };
 
-  const hasFilters = metalType || stoneType || collectionId;
+  const hasFilters = metalType || stoneType || brandFilter;
 
   return (
     <div>
@@ -141,17 +141,17 @@ export default function MyJewellery() {
 
         <select
           className="input w-auto"
-          value={collectionId}
+          value={brandFilter}
           onChange={(e) => {
             const v = e.target.value;
-            setCollectionId(v);
-            setSearchParams(v ? { collection: v } : {}, { replace: true });
+            setBrandFilter(v);
+            setSearchParams(v ? { brand: v } : {}, { replace: true });
           }}
         >
-          <option value="">All collections</option>
-          {collections.map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
+          <option value="">All brands</option>
+          {brands.map((b) => (
+            <option key={b._id} value={b.name}>
+              {b.name}
             </option>
           ))}
         </select>
@@ -223,8 +223,7 @@ export default function MyJewellery() {
         onClose={() => setFormOpen(false)}
         onSaved={handleSaved}
         product={editing}
-        collections={collections}
-        onCollectionCreated={loadCollections}
+        brands={brands}
       />
       <ConfirmDialog
         open={Boolean(deleting)}

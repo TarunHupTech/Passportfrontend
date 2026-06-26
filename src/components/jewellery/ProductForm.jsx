@@ -1,15 +1,10 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Plus, X, Loader2, Calculator } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, X, Loader2, Gift } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Drawer from "../ui/Drawer";
 import api, { imageUrl } from "../../lib/api";
-import { valueItem } from "../../lib/valuation";
-import { formatAED } from "../../lib/format";
-import {
-  ITEM_TYPES,
-  METAL_TYPES,
-  PURITIES,
-  STONE_TYPES,
-} from "../../lib/constants";
+import { ITEM_TYPES, METAL_TYPES, PURITIES, STONE_TYPES } from "../../lib/constants";
 
 const MAX_IMAGES = 8;
 
@@ -19,74 +14,25 @@ const EMPTY = {
   metalType: "Gold",
   purity: "22k",
   netWeight: "",
-  grossWeight: "",
   stoneType: "None",
   stoneWeight: "",
-  makingCharges: "",
-  collectionId: "",
+  brand: "",
+  invoiceAmount: "",
   images: [],
   notes: "",
+  isGift: false,
+  purchaseDate: null,
+  giftedDate: null,
 };
 
-export default function ProductForm({
-  open,
-  onClose,
-  onSaved,
-  product,
-  collections = [],
-  onCollectionCreated,
-}) {
+export default function ProductForm({ open, onClose, onSaved, product, brands = [] }) {
   const isEdit = Boolean(product);
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [settings, setSettings] = useState(null);
   const fileRef = useRef(null);
 
-  // Pricing rules for the live estimate (fetched once, cached).
-  useEffect(() => {
-    if (!open || settings) return;
-    api.get("/settings").then((res) => setSettings(res.data)).catch(() => {});
-  }, [open, settings]);
-
-  // Recompute the estimate whenever the relevant fields change.
-  const estimate = useMemo(() => valueItem(form, settings), [form, settings]);
-
-  // Collections for the dropdown — kept local so an inline-created one appears
-  // immediately without waiting for the parent to refetch.
-  const [cols, setCols] = useState(collections);
-  const [showNewCol, setShowNewCol] = useState(false);
-  const [newColName, setNewColName] = useState("");
-  const [creatingCol, setCreatingCol] = useState(false);
-  useEffect(() => setCols(collections), [collections]);
-  useEffect(() => {
-    if (!open) {
-      setShowNewCol(false);
-      setNewColName("");
-    }
-  }, [open]);
-
-  const createCollection = async () => {
-    const name = newColName.trim();
-    if (!name) return;
-    setCreatingCol(true);
-    setError("");
-    try {
-      const res = await api.post("/collections", { name });
-      setCols((prev) => [res.data, ...prev]);
-      setForm((f) => ({ ...f, collectionId: res.data._id }));
-      setNewColName("");
-      setShowNewCol(false);
-      onCollectionCreated?.();
-    } catch (err) {
-      setError(err.response?.data?.message || "Unable to create collection");
-    } finally {
-      setCreatingCol(false);
-    }
-  };
-
-  // Hydrate form when opening (for both add and edit).
   useEffect(() => {
     if (!open) return;
     setError("");
@@ -102,13 +48,15 @@ export default function ProductForm({
         metalType: product.metalType || "Gold",
         purity: product.purity || "22k",
         netWeight: product.netWeight ?? "",
-        grossWeight: product.grossWeight ?? "",
         stoneType: product.stoneType || "None",
         stoneWeight: product.stoneWeight ?? "",
-        makingCharges: product.makingCharges ?? "",
-        collectionId: product.collectionId?._id || product.collectionId || "",
+        brand: product.brand || "",
+        invoiceAmount: product.invoiceAmount ?? "",
         images: imgs,
         notes: product.notes || "",
+        isGift: !!product.isGift,
+        purchaseDate: product.purchaseDate ? new Date(product.purchaseDate) : null,
+        giftedDate: product.giftedDate ? new Date(product.giftedDate) : null,
       });
     } else {
       setForm(EMPTY);
@@ -121,10 +69,7 @@ export default function ProductForm({
     const files = [...(e.target.files || [])];
     if (!files.length) return;
     const room = MAX_IMAGES - form.images.length;
-    if (room <= 0) {
-      setError(`You can add up to ${MAX_IMAGES} photos`);
-      return;
-    }
+    if (room <= 0) return setError(`You can add up to ${MAX_IMAGES} photos`);
     setUploading(true);
     setError("");
     try {
@@ -154,10 +99,11 @@ export default function ProductForm({
     const payload = {
       ...form,
       netWeight: Number(form.netWeight) || 0,
-      grossWeight: Number(form.grossWeight) || 0,
       stoneWeight: Number(form.stoneWeight) || 0,
-      makingCharges: Number(form.makingCharges) || 0,
+      invoiceAmount: Number(form.invoiceAmount) || 0,
       image: form.images[0] || "",
+      purchaseDate: form.isGift ? null : form.purchaseDate,
+      giftedDate: form.isGift ? form.giftedDate : null,
     };
 
     try {
@@ -180,7 +126,7 @@ export default function ProductForm({
       open={open}
       onClose={onClose}
       title={isEdit ? "Edit jewellery item" : "Add jewellery item"}
-      subtitle="Estimated value is calculated automatically from metal, stone & making charges."
+      subtitle="Record your piece and the amount you paid (invoice amount)."
       widthClass="max-w-xl"
     >
       <form onSubmit={submit} className="space-y-5">
@@ -204,11 +150,7 @@ export default function ProductForm({
                 key={src + idx}
                 className="group relative h-[88px] w-[88px] overflow-hidden rounded-xl border border-line"
               >
-                <img
-                  src={imageUrl(src)}
-                  alt={`photo ${idx + 1}`}
-                  className="h-full w-full object-cover"
-                />
+                <img src={imageUrl(src)} alt={`photo ${idx + 1}`} className="h-full w-full object-cover" />
                 {idx === 0 && (
                   <span className="absolute bottom-0 left-0 right-0 bg-espresso-900/70 py-0.5 text-center text-[0.6rem] font-semibold text-cream-100">
                     Primary
@@ -224,7 +166,6 @@ export default function ProductForm({
                 </button>
               </div>
             ))}
-
             {form.images.length < MAX_IMAGES && (
               <button
                 type="button"
@@ -235,33 +176,20 @@ export default function ProductForm({
                   <Loader2 className="animate-spin text-gold-500" size={22} />
                 ) : (
                   <span className="flex flex-col items-center gap-1 text-[0.68rem]">
-                    <Plus size={20} />
-                    Add
+                    <Plus size={20} /> Add
                   </span>
                 )}
               </button>
             )}
           </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            onChange={handleFiles}
-          />
+          <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFiles} />
         </div>
 
         {/* Name + type */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Item name *</label>
-            <input
-              className="input"
-              value={form.name}
-              onChange={set("name")}
-              placeholder="e.g. Royal Diamond Necklace"
-            />
+            <input className="input" value={form.name} onChange={set("name")} placeholder="e.g. Royal Diamond Necklace" />
           </div>
           <div>
             <label className="label">Item type</label>
@@ -270,6 +198,37 @@ export default function ProductForm({
                 <option key={t}>{t}</option>
               ))}
             </select>
+          </div>
+        </div>
+
+        {/* Brand + invoice amount */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label">Brand</label>
+            <input
+              className="input"
+              list="brand-options"
+              value={form.brand}
+              onChange={set("brand")}
+              placeholder="e.g. Cartier"
+            />
+            <datalist id="brand-options">
+              {brands.map((b) => (
+                <option key={b._id} value={b.name} />
+              ))}
+            </datalist>
+          </div>
+          <div>
+            <label className="label">Invoice amount (AED)</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              className="input"
+              value={form.invoiceAmount}
+              onChange={set("invoiceAmount")}
+              placeholder="0.00"
+            />
           </div>
         </div>
 
@@ -293,20 +252,12 @@ export default function ProductForm({
           </div>
           <div>
             <label className="label">Net weight (g)</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              className="input"
-              value={form.netWeight}
-              onChange={set("netWeight")}
-              placeholder="0.00"
-            />
+            <input type="number" step="0.01" min="0" className="input" value={form.netWeight} onChange={set("netWeight")} placeholder="0.00" />
           </div>
         </div>
 
         {/* Stone */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">Stone type</label>
             <select className="input" value={form.stoneType} onChange={set("stoneType")}>
@@ -328,120 +279,62 @@ export default function ProductForm({
               placeholder="0.00"
             />
           </div>
-          <div>
-            <label className="label">Making charges (AED)</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              className="input"
-              value={form.makingCharges}
-              onChange={set("makingCharges")}
-              placeholder="0.00"
-            />
-          </div>
         </div>
 
-        {/* Collection + notes */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="label">Collection</label>
-            <div className="flex gap-2">
-              <select
-                className="input flex-1"
-                value={form.collectionId}
-                onChange={set("collectionId")}
-              >
-                <option value="">— No collection —</option>
-                {cols.map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => setShowNewCol((s) => !s)}
-                className="grid h-[42px] w-[42px] shrink-0 place-items-center rounded-xl border border-line bg-white text-gold-600 transition hover:border-gold-300 hover:bg-cream-100"
-                title="New collection"
-                aria-label="New collection"
-              >
-                <Plus size={18} />
-              </button>
-            </div>
-            {showNewCol && (
-              <div className="mt-2 flex gap-2">
-                <input
-                  className="input flex-1"
-                  placeholder="New collection name"
-                  value={newColName}
-                  onChange={(e) => setNewColName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      createCollection();
-                    }
-                  }}
-                  autoFocus
+        {/* Gift toggle + date */}
+        <div className="rounded-2xl border border-line bg-cream-50 p-4">
+          <label className="flex cursor-pointer items-center gap-2.5 text-sm font-semibold text-ink">
+            <input
+              type="checkbox"
+              checked={form.isGift}
+              onChange={(e) => setForm((f) => ({ ...f, isGift: e.target.checked }))}
+              className="h-4 w-4 accent-gold-500"
+            />
+            <Gift size={16} className="text-gold-600" />
+            This item was a gift
+          </label>
+
+          <div className="mt-3">
+            {form.isGift ? (
+              <>
+                <label className="label">Gifted date</label>
+                <DatePicker
+                  selected={form.giftedDate}
+                  onChange={(d) => setForm((f) => ({ ...f, giftedDate: d }))}
+                  dateFormat="dd MMM yyyy"
+                  maxDate={new Date()}
+                  placeholderText="Select gifted date"
+                  className="input"
+                  wrapperClassName="w-full block"
+                  popperClassName="liali-datepicker-popper"
+                  popperProps={{ strategy: "fixed" }}
+                  isClearable
                 />
-                <button
-                  type="button"
-                  className="btn btn-dark"
-                  onClick={createCollection}
-                  disabled={creatingCol || !newColName.trim()}
-                >
-                  {creatingCol ? "…" : "Create"}
-                </button>
-              </div>
+              </>
+            ) : (
+              <>
+                <label className="label">Purchase date</label>
+                <DatePicker
+                  selected={form.purchaseDate}
+                  onChange={(d) => setForm((f) => ({ ...f, purchaseDate: d }))}
+                  dateFormat="dd MMM yyyy"
+                  maxDate={new Date()}
+                  placeholderText="Select purchase date"
+                  className="input"
+                  wrapperClassName="w-full block"
+                  popperClassName="liali-datepicker-popper"
+                  popperProps={{ strategy: "fixed" }}
+                  isClearable
+                />
+              </>
             )}
-          </div>
-          <div>
-            <label className="label">Notes</label>
-            <input
-              className="input"
-              value={form.notes}
-              onChange={set("notes")}
-              placeholder="Optional details"
-            />
           </div>
         </div>
 
-        {/* Live valuation */}
-        <div className="overflow-hidden rounded-2xl border border-gold-200 bg-gradient-to-br from-cream-50 to-gold-100/50">
-          <div className="flex items-center gap-2 border-b border-gold-200/70 px-4 py-2.5">
-            <Calculator size={16} className="text-gold-600" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700">
-              Live valuation
-            </span>
-          </div>
-          <div className="space-y-1.5 px-4 py-3 text-sm">
-            <Line
-              label={`Metal (${form.netWeight || 0}g ${form.purity})`}
-              value={formatAED(estimate?.metalValue || 0)}
-            />
-            {hasStone && (
-              <Line
-                label={`Stone (${form.stoneType} ${form.stoneWeight || 0}ct)`}
-                value={formatAED(estimate?.stoneValue || 0)}
-              />
-            )}
-            <Line
-              label="Making charges"
-              value={formatAED(Number(form.makingCharges) || 0)}
-            />
-            <div className="mt-2 flex items-center justify-between border-t border-gold-200/70 pt-2.5">
-              <span className="font-display text-base font-semibold text-ink">
-                Estimated value
-              </span>
-              <span className="font-display text-xl font-semibold text-gold-700">
-                {formatAED(estimate?.estimatedValue || 0)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-xs text-muted">
-              <span>Est. buy-back value</span>
-              <span className="font-semibold">{formatAED(estimate?.resaleValue || 0)}</span>
-            </div>
-          </div>
+        {/* Notes */}
+        <div>
+          <label className="label">Notes</label>
+          <input className="input" value={form.notes} onChange={set("notes")} placeholder="Optional details" />
         </div>
 
         <div className="flex justify-end gap-3 border-t border-line pt-5">
@@ -454,15 +347,5 @@ export default function ProductForm({
         </div>
       </form>
     </Drawer>
-  );
-}
-
-// One line in the live-valuation breakdown.
-function Line({ label, value }) {
-  return (
-    <div className="flex items-center justify-between text-ink/75">
-      <span>{label}</span>
-      <span className="font-medium text-ink">{value}</span>
-    </div>
   );
 }
