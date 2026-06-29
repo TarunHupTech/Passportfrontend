@@ -194,7 +194,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
         </div>
 
         {/* Signatures */}
-        <div style={{ display: "flex", gap: 48, marginTop: 64 }}>
+        {/* <div style={{ display: "flex", gap: 48, marginTop: 64 }}>
           {["Authorised Valuer", "LIALI Seal"].map((label) => (
             <div key={label} style={{ flex: 1 }}>
               <div style={{ borderTop: `1px solid ${C.muted}`, paddingTop: 8 }}>
@@ -211,7 +211,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Disclaimer */}
         <div
