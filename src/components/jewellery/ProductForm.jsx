@@ -20,6 +20,7 @@ const EMPTY = {
   invoiceAmount: "",
   images: [],
   notes: "",
+  occasion: "",
   isGift: false,
   purchaseDate: null,
   giftedDate: null,
@@ -54,6 +55,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
         invoiceAmount: product.invoiceAmount ?? "",
         images: imgs,
         notes: product.notes || "",
+        occasion: product.occasion || "",
         isGift: !!product.isGift,
         purchaseDate: product.purchaseDate ? new Date(product.purchaseDate) : null,
         giftedDate: product.giftedDate ? new Date(product.giftedDate) : null,
@@ -331,10 +333,21 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
           </div>
         </div>
 
-        {/* Notes */}
-        <div>
-          <label className="label">Notes</label>
-          <input className="input" value={form.notes} onChange={set("notes")} placeholder="Optional details" />
+        {/* Occasion + notes */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label">Occasion</label>
+            <input
+              className="input"
+              value={form.occasion}
+              onChange={set("occasion")}
+              placeholder="e.g. Wedding, Anniversary"
+            />
+          </div>
+          <div>
+            <label className="label">Notes</label>
+            <input className="input" value={form.notes} onChange={set("notes")} placeholder="Optional details" />
+          </div>
         </div>
 
         <div className="flex justify-end gap-3 border-t border-line pt-5">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Download, FileBadge, Gem, Plus, Loader2 } from "lucide-react";
 import html2canvas from "html2canvas-pro";
@@ -16,6 +16,7 @@ export default function ValuationCertificate() {
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState("");
+  const [sort, setSort] = useState("value-high");
   const certRef = useRef(null);
 
   useEffect(() => {
@@ -26,6 +27,20 @@ export default function ValuationCertificate() {
   }, []);
 
   const total = products.reduce((s, p) => s + (p.invoiceAmount ?? p.estimatedValue ?? 0), 0);
+
+  // Sort for both the on-screen table and the generated PDF.
+  const sortedProducts = useMemo(() => {
+    const val = (p) => p.invoiceAmount ?? p.estimatedValue ?? 0;
+    const arr = [...products];
+    switch (sort) {
+      case "name":
+        return arr.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      case "value-low":
+        return arr.sort((a, b) => val(a) - val(b));
+      default:
+        return arr.sort((a, b) => val(b) - val(a));
+    }
+  }, [products, sort]);
 
   const handleDownload = async () => {
     if (!certRef.current) return;
@@ -78,17 +93,28 @@ export default function ValuationCertificate() {
           </p>
         </div>
         {products.length > 0 && (
-          <button className="btn btn-primary" onClick={handleDownload} disabled={downloading}>
-            {downloading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" /> Generating…
-              </>
-            ) : (
-              <>
-                <Download size={18} /> Download PDF
-              </>
-            )}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              className="input w-auto"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="value-high">Value: high to low</option>
+              <option value="value-low">Value: low to high</option>
+              <option value="name">Alphabetical (A–Z)</option>
+            </select>
+            <button className="btn btn-primary" onClick={handleDownload} disabled={downloading}>
+              {downloading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" /> Generating…
+                </>
+              ) : (
+                <>
+                  <Download size={18} /> Download PDF
+                </>
+              )}
+            </button>
+          </div>
         )}
       </div>
 
@@ -135,7 +161,7 @@ export default function ValuationCertificate() {
           {/* Framed certificate preview */}
           <div className="overflow-x-auto rounded-2xl bg-cream-200/60 p-4 sm:p-8">
             <div className="mx-auto w-fit shadow-luxe-lg">
-              <PortfolioCertificate ref={certRef} products={products} user={user} total={total} />
+              <PortfolioCertificate ref={certRef} products={sortedProducts} user={user} total={total} />
             </div>
           </div>
         </>

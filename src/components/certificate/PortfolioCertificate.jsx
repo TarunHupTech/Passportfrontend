@@ -123,6 +123,7 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
           <thead>
             <tr style={{ borderBottom: `2px solid ${C.gold}` }}>
               <th style={{ ...th, textAlign: "left" }}>Item</th>
+              <th style={{ ...th, textAlign: "left" }}>Brand</th>
               <th style={{ ...th, textAlign: "left" }}>Metal</th>
               <th style={{ ...th, textAlign: "left" }}>Stone</th>
               <th style={{ ...th, textAlign: "right" }}>Weight</th>
@@ -134,6 +135,9 @@ const PortfolioCertificate = forwardRef(function PortfolioCertificate(
               <tr key={p._id} style={{ borderBottom: `1px solid ${C.line}` }}>
                 <td style={{ padding: "14px 0", fontSize: 14.5, fontWeight: 600, color: C.ink }}>
                   {p.name}
+                </td>
+                <td style={{ padding: "14px 0", fontSize: 13.5, color: C.ink }}>
+                  {p.brand || "—"}
                 </td>
                 <td style={{ padding: "14px 0", fontSize: 13.5, color: C.ink }}>
                   {p.metalType} {p.purity}
