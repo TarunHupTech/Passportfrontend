@@ -4,9 +4,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Drawer from "../ui/Drawer";
 import api, { imageUrl } from "../../lib/api";
-import { ITEM_TYPES, METAL_TYPES, PURITIES, STONE_TYPES } from "../../lib/constants";
+import { useAttributes } from "../../lib/useAttributes";
 
 const MAX_IMAGES = 8;
+
+// Keep the item's saved value selectable even if an admin later removed that
+// option — so editing an older item never silently loses its attribute.
+const withCurrent = (list, val) =>
+  val && !list.includes(val) ? [val, ...list] : list;
 
 const EMPTY = {
   name: "",
@@ -28,6 +33,7 @@ const EMPTY = {
 
 export default function ProductForm({ open, onClose, onSaved, product, brands = [] }) {
   const isEdit = Boolean(product);
+  const attrs = useAttributes();
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -196,7 +202,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
           <div>
             <label className="label">Item type</label>
             <select className="input" value={form.itemType} onChange={set("itemType")}>
-              {ITEM_TYPES.map((t) => (
+              {withCurrent(attrs.itemTypes, form.itemType).map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>
@@ -239,7 +245,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
           <div>
             <label className="label">Metal type</label>
             <select className="input" value={form.metalType} onChange={set("metalType")}>
-              {METAL_TYPES.map((t) => (
+              {withCurrent(attrs.metalTypes, form.metalType).map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>
@@ -247,7 +253,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
           <div>
             <label className="label">Purity</label>
             <select className="input" value={form.purity} onChange={set("purity")}>
-              {PURITIES.map((t) => (
+              {withCurrent(attrs.purities, form.purity).map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>
@@ -263,7 +269,7 @@ export default function ProductForm({ open, onClose, onSaved, product, brands = 
           <div>
             <label className="label">Stone type</label>
             <select className="input" value={form.stoneType} onChange={set("stoneType")}>
-              {STONE_TYPES.map((t) => (
+              {withCurrent(attrs.stoneTypes, form.stoneType).map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>

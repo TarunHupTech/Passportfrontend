@@ -10,6 +10,11 @@ import MyJewellery from './pages/MyJewellery'
 import Brands from './pages/Brands'
 import PurchaseOrders from './pages/PurchaseOrders'
 import ValuationCertificate from './pages/ValuationCertificate'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminAttributes from './pages/admin/AdminAttributes'
+import AdminLayout from './components/admin/AdminLayout'
+import AdminProtectedRoute from './components/admin/AdminProtectedRoute'
 
 function App() {
   const { loading } = useAuth()
@@ -29,6 +34,19 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/sso" element={<SsoLogin />} />
+
+      {/* Separate admin portal */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route
+        element={
+          <AdminProtectedRoute>
+            <AdminLayout />
+          </AdminProtectedRoute>
+        }
+      >
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/attributes" element={<AdminAttributes />} />
+      </Route>
 
       <Route
         element={

@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Plus, Search, LayoutGrid, List, Gem, SlidersHorizontal } from "lucide-react";
 import api from "../lib/api";
-import { METAL_TYPES, STONE_TYPES, SORT_OPTIONS } from "../lib/constants";
+import { SORT_OPTIONS } from "../lib/constants";
+import { useAttributes } from "../lib/useAttributes";
 import ProductCard from "../components/jewellery/ProductCard";
 import ProductTable from "../components/jewellery/ProductTable";
 import ProductForm from "../components/jewellery/ProductForm";
@@ -12,6 +13,7 @@ import Spinner from "../components/ui/Spinner";
 
 export default function MyJewellery() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const attrs = useAttributes();
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,14 +129,14 @@ export default function MyJewellery() {
 
         <select className="input w-auto" value={metalType} onChange={(e) => setMetalType(e.target.value)}>
           <option value="">All metals</option>
-          {METAL_TYPES.map((m) => (
+          {attrs.metalTypes.map((m) => (
             <option key={m}>{m}</option>
           ))}
         </select>
 
         <select className="input w-auto" value={stoneType} onChange={(e) => setStoneType(e.target.value)}>
           <option value="">All stones</option>
-          {STONE_TYPES.map((s) => (
+          {attrs.stoneTypes.map((s) => (
             <option key={s}>{s}</option>
           ))}
         </select>
