@@ -3,33 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { Users, Gem, Wallet, TrendingUp, Tag, Gift, Loader2 } from "lucide-react";
 import adminApi, { ADMIN_TOKEN_KEY } from "../../lib/adminApi";
 import { formatAED } from "../../lib/format";
-import { Panel, BarList, Donut, Histogram, TrendBars, PALETTE } from "../../components/admin/Charts";
-
-const compactAED = (n) => {
-  const v = Number(n) || 0;
-  if (v >= 1_000_000) return `AED ${(v / 1_000_000).toFixed(2)}M`;
-  if (v >= 1_000) return `AED ${(v / 1_000).toFixed(1)}K`;
-  return formatAED(v);
-};
-
-function Kpi({ icon: Icon, label, value, sub }) {
-  return (
-    <div className="card flex items-center gap-4 p-5">
-      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-cream-100 text-gold-600">
-        <Icon size={22} strokeWidth={1.8} />
-      </div>
-      <div className="min-w-0">
-        <p className="text-[0.65rem] font-medium uppercase tracking-wider text-muted">{label}</p>
-        <p className="font-display text-xl font-semibold text-ink">{value}</p>
-        {sub && <p className="truncate text-xs text-muted">{sub}</p>}
-      </div>
-    </div>
-  );
-}
-
-function SectionTitle({ children }) {
-  return <h2 className="mb-4 mt-2 font-display text-lg font-semibold text-ink">{children}</h2>;
-}
+import {
+  Panel,
+  BarList,
+  Donut,
+  Histogram,
+  TrendBars,
+  Kpi,
+  SectionTitle,
+  compactAED,
+  PALETTE,
+} from "../../components/admin/Charts";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();

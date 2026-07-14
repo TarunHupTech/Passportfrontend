@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { BarChart3, SlidersHorizontal, LogOut, ShieldCheck } from "lucide-react";
+import { BarChart3, Users, SlidersHorizontal, LogOut, ShieldCheck } from "lucide-react";
 import adminApi, { ADMIN_TOKEN_KEY } from "../../lib/adminApi";
 
 const NAV = [
   { to: "/admin", label: "Insights", icon: BarChart3, end: true },
+  { to: "/admin/customers", label: "Customers", icon: Users },
   { to: "/admin/attributes", label: "Attributes", icon: SlidersHorizontal },
 ];
 

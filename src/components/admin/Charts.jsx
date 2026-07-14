@@ -1,4 +1,32 @@
 // Lightweight, dependency-free charts themed to the gold/cream palette.
+import { formatAED } from "../../lib/format";
+
+// Compact AED for headline figures (e.g. AED 1.05M / AED 50.1K).
+export const compactAED = (n) => {
+  const v = Number(n) || 0;
+  if (v >= 1_000_000) return `AED ${(v / 1_000_000).toFixed(2)}M`;
+  if (v >= 1_000) return `AED ${(v / 1_000).toFixed(1)}K`;
+  return formatAED(v);
+};
+
+export function Kpi({ icon: Icon, label, value, sub }) {
+  return (
+    <div className="card flex items-center gap-4 p-5">
+      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-cream-100 text-gold-600">
+        {Icon && <Icon size={22} strokeWidth={1.8} />}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[0.65rem] font-medium uppercase tracking-wider text-muted">{label}</p>
+        <p className="font-display text-xl font-semibold text-ink">{value}</p>
+        {sub && <p className="truncate text-xs text-muted">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+export function SectionTitle({ children }) {
+  return <h2 className="mb-4 mt-2 font-display text-lg font-semibold text-ink">{children}</h2>;
+}
 
 export const PALETTE = [
   "#b8923f",

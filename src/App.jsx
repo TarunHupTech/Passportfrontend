@@ -12,6 +12,8 @@ import PurchaseOrders from './pages/PurchaseOrders'
 import ValuationCertificate from './pages/ValuationCertificate'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminCustomers from './pages/admin/AdminCustomers'
+import AdminCustomerDetail from './pages/admin/AdminCustomerDetail'
 import AdminAttributes from './pages/admin/AdminAttributes'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminProtectedRoute from './components/admin/AdminProtectedRoute'
@@ -45,6 +47,8 @@ function App() {
         }
       >
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/customers" element={<AdminCustomers />} />
+        <Route path="/admin/customers/:id" element={<AdminCustomerDetail />} />
         <Route path="/admin/attributes" element={<AdminAttributes />} />
       </Route>
 
